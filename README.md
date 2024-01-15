@@ -5,7 +5,7 @@
 <img width="150" height="100" src="https://magefan.com/media/wysiwyg/made_in_ukraine.jpg">
 
 
-## Installation Method
+## Installation Instructions
   * Download the latest version [archive](https://github.com/magefan/wp-magefan-shopify-blog-export/releases).
   * Unzip the archive.
   * Make sure that the unzipped folder name is "wp-magefan-shopify-blog-export", if not - rename it.
