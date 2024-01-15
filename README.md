@@ -16,4 +16,4 @@
 
 Login to your WordPress Admin Panel > Export to Shopify
     
-<img width="1012" height="375"  src="https://magefan.com/media/wysiwyg/wp-magefan-shopify-blog-export.png">
+<img width="1012" src="https://magefan.com/media/wysiwyg/wp-magefan-shopify-blog-export.png">
