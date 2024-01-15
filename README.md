@@ -7,10 +7,13 @@
 
 ## Installation Method
   * Download the latest version [archive](https://github.com/magefan/wp-magefan-shopify-blog-export/releases).
-  * Unzip it
-  * Make sure that the unzipped folder name is wp-magefan-shopify-blog-export, if not- rename it
-  * Upload wp-magefan-shopify-blog-export folder to your wordpress_root_direcotry/plugins
-  * Login to your WordPress admin panel > navigate to Plugins > Activate Plugin
+  * Unzip the archive.
+  * Make sure that the unzipped folder name is "wp-magefan-shopify-blog-export", if not - rename it.
+  * Upload wp-magefan-shopify-blog-export folder to your wordpress_root_direcotry/wp-content/plugins.
+  * Login to your WordPress admin panel > navigate to Plugins > Activate Plugin.
   
 ## Usage
-  * Login to your WordPress Admin Panel > 
+
+Login to your WordPress Admin Panel > Export to Shopify
+    
+<img width="1012" height="375"  src="https://magefan.com/media/wysiwyg/wp-magefan-shopify-blog-export.png">
