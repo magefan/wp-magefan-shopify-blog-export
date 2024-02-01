@@ -44,7 +44,7 @@ function getExporterKey()
 
         var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
         var pushDataToShopify = ajaxurl;
-        var shopifyUrl = '<?php echo 'https://' . ($_POST['shopify_domain'] ?? '') . '/a/blog/import' ?>';
+        var shopifyUrl = '<?php echo 'https://blog.sfapp.magefan.top/blog/import' ?>';
         var importKey = '<?php echo ($_POST['shopify_import_key'] ?? '') ?>';
         var exporterKey = '<?php echo getExporterKey(); ?>';
         var closedConnection = false;
