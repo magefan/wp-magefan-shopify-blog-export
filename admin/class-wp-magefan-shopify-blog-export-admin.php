@@ -131,6 +131,14 @@ class Plugin_Name_Admin {
                         $preparedData = $export->getComments($offSet);
                     }
                     break;
+                case 'author':
+                    if ($allIds) {
+                        $preparedData = $export->getAuthorIds();
+                    }
+                    else {
+                        $preparedData = $export->getAuthors($offSet);
+                    }
+                    break;
                 case 'media_post':
                     if ($allIds) {
                         $preparedData = $export->getPostMediaPathsNumber();

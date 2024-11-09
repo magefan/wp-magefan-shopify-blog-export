@@ -62,6 +62,20 @@ class Export
         return $this->getEntityIds($sql);
     }
 
+    public function getAuthorIds(): array
+    {
+        global $wpdb;
+        $_pref = $wpdb->prefix;
+
+        $sql = 'SELECT
+                    DISTINCT u.ID as old_id
+                FROM '.$_pref.'users u
+                LEFT JOIN '.$_pref.'posts p on u.ID = p.post_author';
+
+
+        return $this->getEntityIds($sql);
+    }
+
     public function getPostMediaPathsNumber()
     {
         global $wpdb;
@@ -179,6 +193,41 @@ class Export
 
         return $array;
     }
+
+    public function getAuthors(int $offset): array
+    {
+        global $wpdb;
+
+        $_pref = $wpdb->prefix;
+        $offset--;
+
+        $sql = 'SELECT
+                    u.ID as old_id,
+                    u.user_nicename as firstname,
+                    u.user_login as lastname,
+                    u.user_email as email
+                FROM '.$_pref.'users u
+                LEFT JOIN '.$_pref.'posts p on u.ID = p.post_author
+                GROUP BY u.ID
+                LIMIT
+                '  . self::ENTITIES_PER_PAGE;
+
+        if ($offset) {
+            $offset *= self::ENTITIES_PER_PAGE;
+            $sql .= ' OFFSET ' . $offset;
+        }
+
+        $result = $wpdb->get_results($sql);
+        $array = json_decode(json_encode($result), true);
+
+        //Prepare Authors
+        foreach ($array as &$author) {
+            $author['is_active'] = 1;
+        }
+
+        return $array;
+    }
+
 
     public function getTags(int $offset): array
     {
@@ -339,6 +388,7 @@ class Export
                 'categories' => $postCategories,
                 'tags' => $postTags,
                 'featured_img' => $post['featured_img'],
+                'author_id' => $post['post_author'],
             ];
         }
 

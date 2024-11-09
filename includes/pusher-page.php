@@ -60,14 +60,14 @@ function getExporterKey()
             return url.toString();
         };
 
-        const entities = {1: "category", 2: "tag", 3: "post",  4: 'comment', 5: "media_post"};
+        const entities = {1: "category", 2: "tag", 3: "author", 4: "post", 5: 'comment', 6: "media_post"};
 
         var entityIndex = 1;
         var entityIds = {};
         var entityIdsMax = 0;
 
         var extractEntityIdsPromises = [];
-        for (var key in entities) {
+        for (let key in entities) {
             var entityIdsExtractor = setGetParameters(ajaxurl, {'entity': entities[key], 'allIds': true });
             var extractEntityIdsPromise = jQuery.ajax({
                 url: entityIdsExtractor,
