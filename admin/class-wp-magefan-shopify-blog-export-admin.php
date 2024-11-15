@@ -95,8 +95,11 @@ class Plugin_Name_Admin {
 
             $export = new Export();
             $entity = $_GET['entity'];
+            $entitiesLimit = (int)$_GET['entitiesLimit'];
+            $export->setEntitiesLimit($entitiesLimit);
             $offSet = (int)($_GET['offset'] ?? 1);
             $allIds = isset($_GET['allIds']);
+
 
             switch($entity) {
                 case 'category':

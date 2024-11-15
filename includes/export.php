@@ -9,6 +9,22 @@ class Export
 {
     const ENTITIES_PER_PAGE = 100;
 
+    protected $entitiesLimit;
+
+    public function setEntitiesLimit($entitiesLimit)
+    {
+        $this->entitiesLimit = $entitiesLimit;
+    }
+
+    public function getEntitiesLimit()
+    {
+        if (!isset($this->entitiesLimit)) {
+            $this->entitiesLimit = self::ENTITIES_PER_PAGE;
+        }
+
+        return $this->entitiesLimit;
+    }
+
     public function getCategoryIds()
     {
         global $wpdb;
@@ -100,10 +116,10 @@ class Export
         $_pref = $wpdb->prefix;
         $offset--;
 
-        $sql = 'SELECT * FROM ' . $_pref . 'posts WHERE `post_type` = "post" LIMIT ' . self::ENTITIES_PER_PAGE;
+        $sql = 'SELECT * FROM ' . $_pref . 'posts WHERE `post_type` = "post" LIMIT ' . $this->getEntitiesLimit();
 
         if ($offset) {
-            $offset *= self::ENTITIES_PER_PAGE;
+            $offset *= $this->getEntitiesLimit();
             $sql .= ' OFFSET ' . $offset;
         }
 
@@ -161,10 +177,10 @@ class Export
                 LEFT JOIN '.$_pref.'term_taxonomy tt on t.term_id = tt.term_id
                 WHERE tt.taxonomy = "category" AND t.slug <> "uncategorized"
                 LIMIT 
-                ' . self::ENTITIES_PER_PAGE;
+                ' . $this->getEntitiesLimit();
 
         if ($offset) {
-            $offset *= self::ENTITIES_PER_PAGE;
+            $offset *= $this->getEntitiesLimit();
             $sql .= ' OFFSET ' . $offset;
         }
 
@@ -194,10 +210,10 @@ class Export
                     tt.parent as parent_id
                 FROM '.$_pref.'terms t
                 LEFT JOIN '.$_pref.'term_taxonomy tt on t.term_id = tt.term_id
-                WHERE tt.taxonomy = "post_tag" AND t.slug <> "uncategorized" LIMIT '. self::ENTITIES_PER_PAGE;
+                WHERE tt.taxonomy = "post_tag" AND t.slug <> "uncategorized" LIMIT '. $this->getEntitiesLimit();
 
         if ($offset) {
-            $offset *= self::ENTITIES_PER_PAGE;
+            $offset *= $this->getEntitiesLimit();
             $sql .= ' OFFSET ' . $offset;
         }
 
@@ -212,10 +228,10 @@ class Export
         $_pref = $wpdb->prefix;
         $offset--;
 
-        $sql = 'SELECT * FROM ' . $_pref . 'posts WHERE `post_type` = "post" LIMIT ' . self::ENTITIES_PER_PAGE;
+        $sql = 'SELECT * FROM ' . $_pref . 'posts WHERE `post_type` = "post" LIMIT ' . $this->getEntitiesLimit();
 
         if ($offset) {
-            $offset *= self::ENTITIES_PER_PAGE;
+            $offset *= $this->getEntitiesLimit();
             $sql .= ' OFFSET ' . $offset;
         }
 
@@ -357,10 +373,10 @@ class Export
                         FROM
                             '.$_pref.'comments
                         WHERE
-                            `comment_approved`=1 LIMIT '. self::ENTITIES_PER_PAGE;
+                            `comment_approved`=1 LIMIT '. $this->getEntitiesLimit();
 
         if ($offset) {
-            $offset *= self::ENTITIES_PER_PAGE;
+            $offset *= $this->getEntitiesLimit();
             $sql .= ' OFFSET ' . $offset;
         }
 
