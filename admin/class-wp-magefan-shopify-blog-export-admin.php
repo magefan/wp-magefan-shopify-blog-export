@@ -147,6 +147,14 @@ class Plugin_Name_Admin {
                         $preparedData = $export->getPostMediaPaths($offSet);
                     }
                     break;
+                case 'media_author':
+                    if ($allIds) {
+                        $preparedData = $export->getAuthorMediaPathsNumber();
+                    }
+                    else {
+                        $preparedData = $export->getAuthorMediaPaths($offSet);
+                    }
+                    break;
             }
 
 
@@ -172,7 +180,7 @@ class Plugin_Name_Admin {
 
             $data = stripslashes($data);
 
-            if ('media_post' === $entity) {
+            if (in_array($entity, ['media_post', 'media_author'])) {
                 require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/shopify-media-pusher.php';
                 $shopifyMediaPusher = new ShopifyMediaPusher;
 

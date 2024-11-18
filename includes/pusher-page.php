@@ -60,7 +60,7 @@ function getExporterKey()
             return url.toString();
         };
 
-        const entities = {1: "category", 2: "tag", 3: "author", 4: "post", 5: 'comment', 6: "media_post"};
+        const entities = {1: "category", 2: "tag", 3: "author", 4: "post", 5: 'comment', 6: "media_post", 7: "media_author"};
 
         var entityIndex = 1;
         var entityIds = {};

@@ -69,8 +69,7 @@ class Export
 
         $sql = 'SELECT
                     DISTINCT u.ID as old_id
-                FROM '.$_pref.'users u
-                LEFT JOIN '.$_pref.'posts p on u.ID = p.post_author';
+                FROM '.$_pref.'users as u';
 
 
         return $this->getEntityIds($sql);
@@ -107,6 +106,23 @@ class Export
         return $this->getEntityIds($sql);
     }
 
+    //getAuthorMediaPathsNumber
+    public function getAuthorMediaPathsNumber()
+    {
+        global $wpdb;
+
+        $_pref = $wpdb->prefix;
+
+        $sql = 'SELECT m.user_id as old_id
+                FROM
+                    '.$_pref.'usermeta m1
+                WHERE
+                    m.meta_key="avatar" AND m.meta_value > 0
+               ';
+
+        return $this->getEntityIds($sql);
+    }
+
     public function getPostMediaPaths(int $offset): array
     {
         global $wpdb;
@@ -136,6 +152,42 @@ class Export
             $featuredImg = str_replace('//', '/', str_replace($upload_dir['baseurl'], $base_path, $featured_img_url));
 
             $resultFeaturedImgData[] = ['old_id' => $post['ID'], 'featured_img' => $featuredImg];
+        }
+
+        return $resultFeaturedImgData;
+    }
+
+    public function getAuthorMediaPaths(int $offset): array
+    {
+        global $wpdb;
+
+        $_pref = $wpdb->prefix;
+        $offset--;
+
+        $sql = 'SELECT m.user_id as old_id, m.meta_value as image_id
+                FROM
+                    '.$_pref.'usermeta m
+                WHERE
+                    m.meta_key="avatar" AND m.meta_value > 0
+               LIMIT ' . self::ENTITIES_PER_PAGE;
+
+        if ($offset) {
+            $offset *= self::ENTITIES_PER_PAGE;
+            $sql .= ' OFFSET ' . $offset;
+        }
+
+        $resultFeaturedImgData = [];
+
+        $result = $wpdb->get_results($sql);
+        $arrayImages = json_decode(json_encode($result), true);
+        foreach ($arrayImages as $image) {
+            $featured_img_url = wp_get_attachment_image_url($image['image_id'], 'full');
+            $upload_dir = wp_upload_dir();  // Get the base upload directory
+            $base_path = trailingslashit($upload_dir['basedir']);
+
+            $featuredImg = str_replace('//', '/', str_replace($upload_dir['baseurl'], $base_path, $featured_img_url));
+
+            $resultFeaturedImgData[] = ['old_id' => $image['old_id'], 'featured_img' => $featuredImg];
         }
 
         return $resultFeaturedImgData;
@@ -203,11 +255,12 @@ class Export
 
         $sql = 'SELECT
                     u.ID as old_id,
-                    u.user_nicename as firstname,
-                    u.user_login as lastname,
+                    MAX(CASE WHEN m.meta_key = "first_name" THEN m.meta_value END) as firstname,
+                    MAX(CASE WHEN m.meta_key = "last_name" THEN m.meta_value END) as lastname,
+                    MAX(CASE WHEN m.meta_key = "description" THEN m.meta_value END) as content,
                     u.user_email as email
                 FROM '.$_pref.'users u
-                LEFT JOIN '.$_pref.'posts p on u.ID = p.post_author
+                LEFT JOIN '.$_pref.'usermeta m on u.ID = m.user_id
                 GROUP BY u.ID
                 LIMIT
                 '  . self::ENTITIES_PER_PAGE;
