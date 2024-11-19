@@ -472,7 +472,7 @@ class Export
         $arrayComments = json_decode(json_encode($result), true);
 
         foreach ($arrayComments as $comment) {
-            $commentData = [
+            $commentData[] = [
                 'old_id' => $comment['comment_ID'],
                 'parent_id' => $comment['comment_parent'],
                 'post_id' => $comment['comment_post_ID'],
@@ -485,7 +485,7 @@ class Export
             ];
         }
 
-        return $commentData ? [$commentData] : [];
+        return $commentData;
     }
 
     protected function wordpressOutoutWrap($pee, $br = true)

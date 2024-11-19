@@ -124,7 +124,7 @@ class Plugin_Name_Admin {
                     }
                     break;
                 case 'comment':
-                    if (isset($data['allIds'])) {
+                    if ($allIds) {
                         $preparedData = $export->getCommentIds();
                     }
                     else {
