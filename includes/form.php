@@ -23,7 +23,7 @@
             </tr>
             <tr>
                 <th scope="row">
-                    <label for="export_shopify_entities_limit">Entities Limit (100 is default)</label>
+                    <label for="export_shopify_entities_limit">Entities Per Export Request (100 is default, try less if data is not exported)</label>
                 </th>
                 <td>
                     <input id="export_shopify_entities_limit" name="entities_limit" type="text" value="100" required />
