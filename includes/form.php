@@ -22,6 +22,14 @@
                 </td>
             </tr>
             <tr>
+                <th scope="row">
+                    <label for="export_shopify_entities_limit">Entities Per Export Request (100 is default, try less if data is not exported)</label>
+                </th>
+                <td>
+                    <input id="export_shopify_entities_limit" name="entities_limit" type="text" value="100" required />
+                </td>
+            </tr>
+            <tr>
                 <td></td>
                 <td><input type="submit" name="submit_form" value="Start Export" class="button button-primary"></td>
             </tr>

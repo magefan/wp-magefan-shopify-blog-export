@@ -46,6 +46,7 @@ function getExporterKey()
         var pushDataToShopify = ajaxurl;
         var shopifyUrl = '<?php echo 'https://blog.sfapp.magefan.top/blog/import' ?>';
         var importKey = '<?php echo ($_POST['shopify_import_key'] ?? '') ?>';
+        var entitiesLimit = '<?php echo ($_POST['entities_limit'] ?? '') ?>';
         var exporterKey = '<?php echo getExporterKey(); ?>';
         var closedConnection = false;
         var indexPageUrl = '<?php echo admin_url('admin.php?page=magefan-shopify-blog-export-form'); ?>';
@@ -101,7 +102,8 @@ function getExporterKey()
 
                 ajaxurl = setGetParameters(ajaxurl, {
                     'entity': entities[entityIndex],
-                    'offset': offset
+                    'offset': offset,
+                    'entitiesLimit': entitiesLimit
                 });
 
                 var runRequests = function() {
