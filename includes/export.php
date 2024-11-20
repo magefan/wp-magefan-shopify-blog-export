@@ -325,9 +325,9 @@ class Export
 
         $result = $wpdb->get_results($sql);
         $arrayPosts = json_decode(json_encode($result), true);
-//        if($offset ==1) {
-//            echo $sql;exit;
-//        }
+
+        $blogId = get_current_blog_id();
+
         foreach ($arrayPosts as &$post) {
             /* find post categories*/
             $postCategories = [];
@@ -424,6 +424,11 @@ class Export
 
             $content = $this->wordpressOutoutWrap($content);
 
+            $postViewsCount = 0;
+            if (class_exists('WebberZone\Top_Ten\Counter')) {
+                $postViewsCount = \WebberZone\Top_Ten\Counter::get_post_count_only($post['ID'], 'total', $blogId);
+            }
+
             $resultPostData[] = [
                 'old_id' => $post['ID'],
                 'title' => $post['post_title'],
@@ -442,6 +447,7 @@ class Export
                 'tags' => $postTags,
                 'featured_img' => $post['featured_img'],
                 'author_id' => $post['post_author'],
+                'views_count' => $postViewsCount
             ];
         }
 
