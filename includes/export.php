@@ -62,6 +62,19 @@ class Export
         return $this->getEntityIds($sql);
     }
 
+    public function getAuthorIds(): array
+    {
+        global $wpdb;
+        $_pref = $wpdb->prefix;
+
+        $sql = 'SELECT
+                    DISTINCT u.ID as old_id
+                FROM '.$_pref.'users as u';
+
+
+        return $this->getEntityIds($sql);
+    }
+
     public function getPostMediaPathsNumber()
     {
         global $wpdb;
@@ -89,6 +102,23 @@ class Export
                     p1.post_type="post"
                 ORDER BY
                     p1.post_date DESC';
+
+        return $this->getEntityIds($sql);
+    }
+
+    //getAuthorMediaPathsNumber
+    public function getAuthorMediaPathsNumber()
+    {
+        global $wpdb;
+
+        $_pref = $wpdb->prefix;
+
+        $sql = 'SELECT m.user_id as old_id
+                FROM
+                    '.$_pref.'usermeta m1
+                WHERE
+                    m.meta_key="avatar" AND m.meta_value > 0
+               ';
 
         return $this->getEntityIds($sql);
     }
@@ -122,6 +152,42 @@ class Export
             $featuredImg = str_replace('//', '/', str_replace($upload_dir['baseurl'], $base_path, $featured_img_url));
 
             $resultFeaturedImgData[] = ['old_id' => $post['ID'], 'featured_img' => $featuredImg];
+        }
+
+        return $resultFeaturedImgData;
+    }
+
+    public function getAuthorMediaPaths(int $offset): array
+    {
+        global $wpdb;
+
+        $_pref = $wpdb->prefix;
+        $offset--;
+
+        $sql = 'SELECT m.user_id as old_id, m.meta_value as image_id
+                FROM
+                    '.$_pref.'usermeta m
+                WHERE
+                    m.meta_key="avatar" AND m.meta_value > 0
+               LIMIT ' . self::ENTITIES_PER_PAGE;
+
+        if ($offset) {
+            $offset *= self::ENTITIES_PER_PAGE;
+            $sql .= ' OFFSET ' . $offset;
+        }
+
+        $resultFeaturedImgData = [];
+
+        $result = $wpdb->get_results($sql);
+        $arrayImages = json_decode(json_encode($result), true);
+        foreach ($arrayImages as $image) {
+            $featured_img_url = wp_get_attachment_image_url($image['image_id'], 'full');
+            $upload_dir = wp_upload_dir();  // Get the base upload directory
+            $base_path = trailingslashit($upload_dir['basedir']);
+
+            $featuredImg = str_replace('//', '/', str_replace($upload_dir['baseurl'], $base_path, $featured_img_url));
+
+            $resultFeaturedImgData[] = ['old_id' => $image['old_id'], 'featured_img' => $featuredImg];
         }
 
         return $resultFeaturedImgData;
@@ -180,6 +246,42 @@ class Export
         return $array;
     }
 
+    public function getAuthors(int $offset): array
+    {
+        global $wpdb;
+
+        $_pref = $wpdb->prefix;
+        $offset--;
+
+        $sql = 'SELECT
+                    u.ID as old_id,
+                    MAX(CASE WHEN m.meta_key = "first_name" THEN m.meta_value END) as firstname,
+                    MAX(CASE WHEN m.meta_key = "last_name" THEN m.meta_value END) as lastname,
+                    MAX(CASE WHEN m.meta_key = "description" THEN m.meta_value END) as content,
+                    u.user_email as email
+                FROM '.$_pref.'users u
+                LEFT JOIN '.$_pref.'usermeta m on u.ID = m.user_id
+                GROUP BY u.ID
+                LIMIT
+                '  . self::ENTITIES_PER_PAGE;
+
+        if ($offset) {
+            $offset *= self::ENTITIES_PER_PAGE;
+            $sql .= ' OFFSET ' . $offset;
+        }
+
+        $result = $wpdb->get_results($sql);
+        $array = json_decode(json_encode($result), true);
+
+        //Prepare Authors
+        foreach ($array as &$author) {
+            $author['is_active'] = 1;
+        }
+
+        return $array;
+    }
+
+
     public function getTags(int $offset): array
     {
         global $wpdb;
@@ -223,9 +325,9 @@ class Export
 
         $result = $wpdb->get_results($sql);
         $arrayPosts = json_decode(json_encode($result), true);
-//        if($offset ==1) {
-//            echo $sql;exit;
-//        }
+
+        $blogId = get_current_blog_id();
+
         foreach ($arrayPosts as &$post) {
             /* find post categories*/
             $postCategories = [];
@@ -322,6 +424,11 @@ class Export
 
             $content = $this->wordpressOutoutWrap($content);
 
+            $postViewsCount = 0;
+            if (class_exists('WebberZone\Top_Ten\Counter')) {
+                $postViewsCount = \WebberZone\Top_Ten\Counter::get_post_count_only($post['ID'], 'total', $blogId);
+            }
+
             $resultPostData[] = [
                 'old_id' => $post['ID'],
                 'title' => $post['post_title'],
@@ -339,6 +446,8 @@ class Export
                 'categories' => $postCategories,
                 'tags' => $postTags,
                 'featured_img' => $post['featured_img'],
+                'author_id' => $post['post_author'],
+                'views_count' => $postViewsCount
             ];
         }
 
@@ -369,7 +478,7 @@ class Export
         $arrayComments = json_decode(json_encode($result), true);
 
         foreach ($arrayComments as $comment) {
-            $commentData = [
+            $commentData[] = [
                 'old_id' => $comment['comment_ID'],
                 'parent_id' => $comment['comment_parent'],
                 'post_id' => $comment['comment_post_ID'],
@@ -382,7 +491,7 @@ class Export
             ];
         }
 
-        return $commentData ? [$commentData] : [];
+        return $commentData;
     }
 
     protected function wordpressOutoutWrap($pee, $br = true)
