@@ -62,6 +62,7 @@
         if (this.value === 'shopify') {
             description.style.display = 'block';
             document.getElementById('domain').style.display = 'none';
+            document.getElementById('export_domain').required = false;
             description.innerHTML = 'Please copy the <strong>Import Key</strong> from your Shopify Admin Panel > Apps > Magefan Blog > Configuration > Import Key.'
         } else if (this.value === 'magento') {
             description.style.display = 'block';

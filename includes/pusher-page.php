@@ -44,9 +44,7 @@ function getExporterKey()
 
         var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
         var pushDataToShopify = ajaxurl;
-        var shopifyUrl = '<?php echo ($_POST['destination'] == 'magento'
-            ? ($_POST['destination'] == 'magento' ? $_POST['magento_domain'] . 'rest/V1/magefan-blogimport/wpimport' : 'https://blog.sfapp.magefan.top/blog/import')
-            : ''); ?>';
+        var shopifyUrl = '<?php echo $_POST['destination'] == 'magento' ? $_POST['magento_domain'] . 'rest/V1/magefan-blogimport/wpimport' : 'https://blog.sfapp.magefan.top/blog/import'; ?>';
         var importKey = '<?php echo ($_POST['shopify_import_key'] ?? '') ?>';
         var entitiesLimit = '<?php echo ($_POST['entities_limit'] ?? '') ?>';
         var exporterKey = '<?php echo getExporterKey(); ?>';
