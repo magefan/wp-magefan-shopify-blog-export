@@ -30,12 +30,12 @@ class Export
         global $wpdb;
         $_pref = $wpdb->prefix;
 
-        $sql = 'SELECT
-                    t.term_id as old_id
-                FROM '.$_pref.'terms t
-                LEFT JOIN '.$_pref.'term_taxonomy tt on t.term_id = tt.term_id
-                WHERE tt.taxonomy = "category" AND t.slug <> "uncategorized"';
-
+        $sql = $wpdb->prepare(
+            'SELECT t.term_id as old_id
+                FROM %s t
+                LEFT JOIN %s tt on t.term_id = tt.term_id
+                WHERE tt.taxonomy = "category" AND t.slug <> "uncategorized"', [$_pref . 'terms' , $_pref . 'term_taxonomy']
+        );
         return $this->getEntityIds($sql);
     }
 
@@ -44,11 +44,12 @@ class Export
         global $wpdb;
         $_pref = $wpdb->prefix;
 
-        $sql = 'SELECT
-                    t.term_id as old_id
-                FROM '.$_pref.'terms t
-                LEFT JOIN '.$_pref.'term_taxonomy tt on t.term_id = tt.term_id
-                WHERE tt.taxonomy = "post_tag" AND t.slug <> "uncategorized"';
+        $sql = $wpdb->prepare(
+            'SELECT t.term_id as old_id
+                FROM %s t
+                LEFT JOIN %s tt on t.term_id = tt.term_id
+                WHERE tt.taxonomy = "post_tag" AND t.slug <> "uncategorized"' , [$_pref . 'terms' , $_pref . 'term_taxonomy']
+        );
 
         return $this->getEntityIds($sql);
     }
@@ -58,7 +59,7 @@ class Export
         global $wpdb;
         $_pref = $wpdb->prefix;
 
-        $sql = 'SELECT ID as old_id FROM '.$_pref.'posts WHERE `post_type` = "post"';
+        $sql = $wpdb->prepare('SELECT ID as old_id FROM %s WHERE `post_type` = "post"', $_pref . 'posts');
 
         return $this->getEntityIds($sql);
     }
@@ -68,12 +69,14 @@ class Export
         global $wpdb;
         $_pref = $wpdb->prefix;
 
-        $sql = 'SELECT
-                        comment_ID as old_id
+        $sql = $wpdb->prepare(
+            'SELECT comment_ID as old_id
                         FROM
-                            '.$_pref.'comments
+                            %s
                         WHERE
-                            `comment_approved`=1';
+                            `comment_approved`=1',
+            $_pref . 'comments'
+        );
 
         return $this->getEntityIds($sql);
     }
@@ -83,11 +86,12 @@ class Export
         global $wpdb;
         $_pref = $wpdb->prefix;
 
-        $sql = 'SELECT
+        $sql = $wpdb->prepare(
+            'SELECT
                     DISTINCT u.ID as old_id
-                FROM '.$_pref.'users as u';
-
-
+                FROM %s as u',
+            $_pref . 'users'
+        );
         return $this->getEntityIds($sql);
     }
 
@@ -129,12 +133,14 @@ class Export
 
         $_pref = $wpdb->prefix;
 
-        $sql = 'SELECT m.user_id as old_id
+        $sql = $wpdb->prepare(
+            'SELECT m.user_id as old_id
                 FROM
-                    '.$_pref.'usermeta m1
+                    %s m1
                 WHERE
                     m.meta_key="avatar" AND m.meta_value > 0
-               ';
+               ', $_pref . 'usermeta'
+        );
 
         return $this->getEntityIds($sql);
     }
@@ -146,8 +152,10 @@ class Export
         $_pref = $wpdb->prefix;
         $offset--;
 
-        $sql = 'SELECT * FROM ' . $_pref . 'posts WHERE `post_type` = "post" LIMIT ' . $this->getEntitiesLimit();
-
+        $sql = $wpdb->prepare(
+            'SELECT * FROM %s WHERE `post_type` = "post" LIMIT %i',
+            [$_pref . 'posts', $this->getEntitiesLimit()]
+        );
         if ($offset) {
             $offset *= $this->getEntitiesLimit();
             $sql .= ' OFFSET ' . $offset;
@@ -180,12 +188,15 @@ class Export
         $_pref = $wpdb->prefix;
         $offset--;
 
-        $sql = 'SELECT m.user_id as old_id, m.meta_value as image_id
+        $sql =  $wpdb->prepare(
+            'SELECT m.user_id as old_id, m.meta_value as image_id
                 FROM
-                    '.$_pref.'usermeta m
+                    %s m
                 WHERE
                     m.meta_key="avatar" AND m.meta_value > 0
-               LIMIT ' . self::ENTITIES_PER_PAGE;
+               LIMIT %i',
+            [$_pref . 'usermeta', self::ENTITIES_PER_PAGE]
+        );
 
         if ($offset) {
             $offset *= self::ENTITIES_PER_PAGE;

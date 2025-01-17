@@ -6,7 +6,7 @@
 -->
 
 <h1>Export to Shopify Blog by Magefan</h1>
-<form method="post" action="<?php echo admin_url('admin.php?page=mf-push-page'); ?>">
+<form method="post" action="<?php echo esc_url( admin_url( 'admin.php?page=mf-push-page' ) ); ?>">
     <!-- Your HTML form fields go here -->
     <input type="hidden" name="action" value="mf_handle_form_submission">
 

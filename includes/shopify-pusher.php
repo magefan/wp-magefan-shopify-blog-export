@@ -9,38 +9,35 @@ class ShopifyPusher
     protected $curl;
 
     public function execute(string $url, string $data, string $entity) {
-        $ch = curl_init($url);
+        $args = [
+            'body' => [
+                'data' => $data,
+                'entity' => $entity,
+            ],
+            'timeout' => 15,
+            'headers' => [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
+        ];
 
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1 );
+        $response = wp_remote_post($url, $args);
 
-        curl_setopt($ch, CURLOPT_POSTFIELDS, ['data' => $data, 'entity' => $entity]);
-
-        try {
-            $result = curl_exec($ch);
-
-            if ($result === false) {
-                throw new \Exception(curl_error($ch), curl_errno($ch));
-            }
-
-            if (200 != curl_getinfo($ch, CURLINFO_HTTP_CODE)) {
-                return json_encode([
-                    'errorMessage' => 'Wrong Import Key',
-                ]);
-            }
-
-            return $result;
-
+        if (is_wp_error($response)) {
+            return wp_json_encode([
+                'errorMessage' => $response->get_error_message(),
+            ]);
         }
-        catch (\Exception $e) {
-            return json_encode([
-                    'errorMessage' => $e->getMessage(),
-                ]);
+
+        $response_code = wp_remote_retrieve_response_code($response);
+        if (200 !== $response_code) {
+            return wp_json_encode([
+                'errorMessage' => 'Wrong Import Key',
+            ]);
         }
-        finally {
-            // Close curl handle unless it failed to initialize
-            if (is_resource($ch)) {
-                curl_close($ch);
-            }
-        }
+
+        $response_body = wp_remote_retrieve_body($response);
+
+        return $response_body;
     }
+
 }
