@@ -34,7 +34,7 @@ class Export
             'SELECT t.term_id as old_id
                 FROM %s t
                 LEFT JOIN %s tt on t.term_id = tt.term_id
-                WHERE tt.taxonomy = "category" AND t.slug <> "uncategorized"', [$_pref . 'terms' , $_pref . 'term_taxonomy']
+                WHERE tt.taxonomy = "category" AND t.slug <> "uncategorized"', $_pref . 'terms' , $_pref . 'term_taxonomy'
         );
         return $this->getEntityIds($sql);
     }
@@ -48,7 +48,7 @@ class Export
             'SELECT t.term_id as old_id
                 FROM %s t
                 LEFT JOIN %s tt on t.term_id = tt.term_id
-                WHERE tt.taxonomy = "post_tag" AND t.slug <> "uncategorized"' , [$_pref . 'terms' , $_pref . 'term_taxonomy']
+                WHERE tt.taxonomy = "post_tag" AND t.slug <> "uncategorized"' , $_pref . 'terms' , $_pref . 'term_taxonomy'
         );
 
         return $this->getEntityIds($sql);
@@ -152,10 +152,8 @@ class Export
         $_pref = $wpdb->prefix;
         $offset--;
 
-        $sql = $wpdb->prepare(
-            'SELECT * FROM %s WHERE `post_type` = "post" LIMIT %i',
-            [$_pref . 'posts', $this->getEntitiesLimit()]
-        );
+        $sql = 'SELECT * FROM ' . $_pref . 'posts WHERE `post_type` = "post" LIMIT ' . $this->getEntitiesLimit();
+
         if ($offset) {
             $offset *= $this->getEntitiesLimit();
             $sql .= ' OFFSET ' . $offset;
@@ -163,8 +161,8 @@ class Export
 
         $resultFeaturedImgData = [];
 
-        $result = $wpdb->get_results($sql);
-        $arrayPosts = json_decode(json_encode($result), true);
+        $result = $wpdb->get_results($wpdb->prepare($sql));
+        $arrayPosts = json_decode(wp_json_encode($result), true);
         foreach ($arrayPosts as $post) {
             $featured_img_id = get_post_thumbnail_id($post['ID']);
 
@@ -188,15 +186,12 @@ class Export
         $_pref = $wpdb->prefix;
         $offset--;
 
-        $sql =  $wpdb->prepare(
-            'SELECT m.user_id as old_id, m.meta_value as image_id
+        $sql = 'SELECT m.user_id as old_id, m.meta_value as image_id
                 FROM
-                    %s m
+                    '.$_pref.'usermeta m
                 WHERE
                     m.meta_key="avatar" AND m.meta_value > 0
-               LIMIT %i',
-            [$_pref . 'usermeta', self::ENTITIES_PER_PAGE]
-        );
+               LIMIT ' . self::ENTITIES_PER_PAGE;
 
         if ($offset) {
             $offset *= self::ENTITIES_PER_PAGE;
@@ -205,8 +200,8 @@ class Export
 
         $resultFeaturedImgData = [];
 
-        $result = $wpdb->get_results($sql);
-        $arrayImages = json_decode(json_encode($result), true);
+        $result = $wpdb->get_results($wpdb->prepare($sql));
+        $arrayImages = json_decode(wp_json_encode($result), true);
         foreach ($arrayImages as $image) {
             $featured_img_url = wp_get_attachment_image_url($image['image_id'], 'full');
             $upload_dir = wp_upload_dir();  // Get the base upload directory
@@ -227,7 +222,7 @@ class Export
         $entityIds = [];
 
         $result = $wpdb->get_results($sql);
-        $entityIdsArray = json_decode(json_encode($result), true);
+        $entityIdsArray = json_decode(wp_json_encode($result), true);
 
         foreach ($entityIdsArray as $entityIdArray) {
             if (isset($entityIdArray['old_id'])) {
@@ -261,8 +256,8 @@ class Export
             $sql .= ' OFFSET ' . $offset;
         }
 
-        $result = $wpdb->get_results($sql);
-        $array = json_decode(json_encode($result), true);
+        $result = $wpdb->get_results($wpdb->prepare($sql));
+        $array = json_decode(wp_json_encode($result), true);
 
         //Prepare Categories
         foreach ($array as &$category) {
@@ -297,8 +292,8 @@ class Export
             $sql .= ' OFFSET ' . $offset;
         }
 
-        $result = $wpdb->get_results($sql);
-        $array = json_decode(json_encode($result), true);
+        $result = $wpdb->get_results($wpdb->prepare($sql));
+        $array = json_decode(wp_json_encode($result), true);
 
         //Prepare Authors
         foreach ($array as &$author) {
@@ -330,8 +325,8 @@ class Export
             $sql .= ' OFFSET ' . $offset;
         }
 
-        $result = $wpdb->get_results($sql);
-        return json_decode(json_encode($result), true);
+        $result = $wpdb->get_results($wpdb->prepare($sql));
+        return json_decode(wp_json_encode($result), true);
     }
 
     public function getPosts(int $offset): array
@@ -350,8 +345,8 @@ class Export
 
         $resultPostData = [];
 
-        $result = $wpdb->get_results($sql);
-        $arrayPosts = json_decode(json_encode($result), true);
+        $result = $wpdb->get_results($wpdb->prepare($sql));
+        $arrayPosts = json_decode(wp_json_encode($result), true);
 
         $blogId = get_current_blog_id();
 
@@ -364,7 +359,7 @@ class Export
                     WHERE tr.`object_id` = "' . $post['ID'] . '" AND tt.taxonomy = "category"';
 
             $result2 = $wpdb->get_results($sql);
-            $arrayCategories = json_decode(json_encode($result2), true);
+            $arrayCategories = json_decode(wp_json_encode($result2), true);
             foreach ($arrayCategories as $category) {
                 $postCategories[] = $category['term_id'];
             }
@@ -377,7 +372,7 @@ class Export
                     WHERE tr.`object_id` = "' . $post['ID'] . '" AND tt.taxonomy = "post_tag"';
 
             $result2 = $wpdb->get_results($sql);
-            $arrayTags = json_decode(json_encode($result2), true);
+            $arrayTags = json_decode(wp_json_encode($result2), true);
             foreach ($arrayTags as $tag) {
                 $postTags[] = $tag['term_id'];
             }
@@ -408,7 +403,7 @@ class Export
                 ORDER BY
                     p1.post_date DESC';
 
-            $result2 = json_decode(json_encode($wpdb->get_results($sql)), true);
+            $result2 = json_decode(wp_json_encode($wpdb->get_results($wpdb->prepare($sql))), true);
             foreach ($result2 as $data2) {
                 if ($data2['featured_img']) {
                     $post['featured_img'] = '/' . $data2['featured_img'];
@@ -418,7 +413,7 @@ class Export
 
             /* Find Meta Data */
             $sql = 'SELECT * FROM `' . $_pref . 'postmeta` WHERE `post_id` = ' . ((int)$post['ID']);
-            $metaResult = json_decode(json_encode($wpdb->get_results($sql)), true);
+            $metaResult = json_decode(wp_json_encode($wpdb->get_results($wpdb->prepare($sql))), true);
             foreach ($metaResult as $metaData) {
 
                 $metaValue = trim(isset($metaData['meta_value']) ? $metaData['meta_value'] : '');
@@ -501,8 +496,8 @@ class Export
         }
 
         $commentData = [];
-        $result = $wpdb->get_results($sql);
-        $arrayComments = json_decode(json_encode($result), true);
+        $result = $wpdb->get_results($wpdb->prepare($sql));
+        $arrayComments = json_decode(wp_json_encode($result), true);
 
         foreach ($arrayComments as $comment) {
             $commentData[] = [
