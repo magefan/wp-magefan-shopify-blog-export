@@ -6,7 +6,7 @@
 
 class ShopifyMediaPusher
 {
-    public function execute(string $url, string $data, string $entity) {
+    /*public function execute(string $url, string $data, string $entity) {
         $decodedData = json_decode($data,true);
         $ch = curl_init();
 
@@ -28,5 +28,42 @@ class ShopifyMediaPusher
         curl_close ($ch);
 
         return (string)json_encode($result);
+    }*/
+
+
+    public function execute(string $url, string $data, string $entity) {
+        $decodedData = json_decode($data, true);
+        $result = [];
+
+        foreach ($decodedData as $item) {
+            if (file_exists($item['featured_img'])) {
+                $file = new \CURLFile($item['featured_img']);
+
+                $postData = [
+                    "data"   => $data,
+                    "file"   => $file,
+                    'old_id' => $item['old_id'],
+                    'entity' => str_replace('media_', '', $entity),
+                ];
+
+                $response = wp_remote_post($url, [
+                    'method'    => 'POST',
+                    'body'      => $postData,
+                    'timeout'   => 45,
+                    'headers'   => [
+                        'Content-Type' => 'multipart/form-data',
+                    ],
+                ]);
+
+                if (is_wp_error($response)) {
+                    $result[] = 'Error: ' . $response->get_error_message();
+                } else {
+                    $result[] = wp_remote_retrieve_body($response);
+                }
+            }
+        }
+
+        return wp_json_encode($result);
     }
+
 }
