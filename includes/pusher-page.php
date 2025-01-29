@@ -49,7 +49,7 @@ function getExporterKey()
         var entitiesLimit = '<?php echo ($_POST['entities_limit'] ?? '') ?>';
         var exporterKey = '<?php echo getExporterKey(); ?>';
         var closedConnection = false;
-        var indexPageUrl = '<?php echo admin_url('admin.php?page=magefan-shopify-blog-export-form'); ?>';
+        var indexPageUrl = '<?php echo admin_url('admin.php?page=magefan-blog-export-form'); ?>';
 
         var setGetParameters = function (urlStr, getParameters) {
             var url = new URL(urlStr);

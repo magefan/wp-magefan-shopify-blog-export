@@ -5,7 +5,7 @@
  */
 -->
 
-<h1>Export to Shopify Blog by Magefan</h1>
+<h1>Export to Magefan Blog</h1>
 <form method="post" action="<?php echo admin_url('admin.php?page=mf-push-page'); ?>">
     <!-- Your HTML form fields go here -->
     <input type="hidden" name="action" value="mf_handle_form_submission">
@@ -24,7 +24,7 @@
             </tr>
             <tr>
                 <th scope="row">
-                    <label for="export_shopify_import_key">Shopify Import Key</label>
+                    <label for="export_shopify_import_key">Import Key</label>
                 </th>
                 <td>
                     <input id="export_shopify_import_key" name="shopify_import_key" type="text" required />

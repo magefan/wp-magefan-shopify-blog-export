@@ -208,10 +208,10 @@ class Plugin_Name_Admin {
             function mf_add_custom_link_to_admin_menu()
             {
                 add_menu_page(
-                    'Export to Shopify Form', // Page title
-                    'Export to Shopify',      // Menu title
+                    'Export to Magefan Blog Form', // Page title
+                    'Export to Magefan Blog',      // Menu title
                     'manage_options',   // Capability
-                    'magefan-shopify-blog-export-form', // Menu slug
+                    'magefan-blog-export-form', // Menu slug
                     'mf_custom_link_page', // Callback function to display the page content
                     'dashicons-admin-links', // Icon URL or dashicon name
                     99                  // Position in the menu

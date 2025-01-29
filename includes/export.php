@@ -453,7 +453,7 @@ class Export
                 'meta_keywords' => '',
                 'identifier' => $post['post_name'],
                 'content_heading' => '',
-                'content' => $content,
+                'content' => do_shortcode($content),
                 'short_content' => isset($post['short_content']) ? $post['short_content'] : '',
                 'creation_time' => $creationTime,
                 'update_time' => (string)$post['post_modified_gmt'],
