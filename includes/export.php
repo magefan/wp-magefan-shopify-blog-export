@@ -438,6 +438,9 @@ class Export
                 $content
             );
 
+            /** This filter is documented in wp-includes/post-template.php */
+            $content = apply_filters( 'the_content', str_replace( ']]>', ']]&gt;', $content ) );
+
             $content = $this->wordpressOutoutWrap($content);
 
             $postViewsCount = 0;
@@ -453,7 +456,7 @@ class Export
                 'meta_keywords' => '',
                 'identifier' => $post['post_name'],
                 'content_heading' => '',
-                'content' => do_shortcode($content),
+                'content' => $content,
                 'short_content' => isset($post['short_content']) ? $post['short_content'] : '',
                 'creation_time' => $creationTime,
                 'update_time' => (string)$post['post_modified_gmt'],
