@@ -448,6 +448,13 @@ class Export
                 $postViewsCount = \WebberZone\Top_Ten\Counter::get_post_count_only($post['ID'], 'total', $blogId);
             }
 
+            if (strpos($content, 'wp-block-gallery')) {
+                $gallery_css = file_get_contents( ABSPATH . 'wp-includes/blocks/gallery/style.min.css' );
+                $common_css = file_get_contents( ABSPATH . 'wp-includes/css/dist/block-library/common.min.css' );
+
+                $css = wp_get_global_stylesheet() . "\n" . $gallery_css . "\n" . $common_css;
+            }
+
             $resultPostData[] = [
                 'old_id' => $post['ID'],
                 'title' => $post['post_title'],
@@ -466,7 +473,8 @@ class Export
                 'tags' => $postTags,
                 'featured_img' => $post['featured_img'],
                 'author_id' => $post['post_author'],
-                'views_count' => $postViewsCount
+                'views_count' => $postViewsCount,
+                'custom_css' => $css ?? ''
             ];
         }
 
