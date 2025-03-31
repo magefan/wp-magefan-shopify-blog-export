@@ -45,6 +45,7 @@
                 </th>
                 <td>
                     <input id="export_domain" name="magento_domain" type="text"/>
+                    <p class="description" id="export-domain-description">Please enter your store domain, for example, https://my.store.com/.</p>
                 </td>
             </tr>
             <tr>
