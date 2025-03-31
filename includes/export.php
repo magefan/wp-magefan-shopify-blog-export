@@ -432,11 +432,11 @@ class Export
 
             $content = $post['post_content'];
             $content = str_replace('<!--more-->', '<!-- pagebreak -->', $content);
-            $content = preg_replace(
+            /*$content = preg_replace(
                 '/src=[\'"]((http:\/\/|https:\/\/|\/\/)(.*)|(\s|"|\')|(\/[\d\w_\-\.]*))\/wp-content\/uploads_(.*)((\.jpg|\.jpeg|\.gif|\.png|\.tiff|\.tif|\.svg)|(\s|"|\'))[\'"\s]/Ui',
                 'src="$4{{media url="magefan_blog$6$8"}}$9"',
                 $content
-            );
+            );*/
 
             /** This filter is documented in wp-includes/post-template.php */
             $content = apply_filters( 'the_content', str_replace( ']]>', ']]&gt;', $content ) );
