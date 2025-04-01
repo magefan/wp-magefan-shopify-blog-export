@@ -454,6 +454,7 @@ class Export
 
                 $css = wp_get_global_stylesheet() . "\n" . $gallery_css . "\n" . $common_css;
             }
+            $upload_dir = wp_upload_dir();
 
             $resultPostData[] = [
                 'old_id' => $post['ID'],
@@ -471,7 +472,7 @@ class Export
                 'is_active' => (int)($post['post_status'] == 'publish'),
                 'categories' => $postCategories,
                 'tags' => $postTags,
-                'featured_img' => $post['featured_img'],
+                'featured_img' => $post['featured_img'] ? $upload_dir['baseurl'] . $post['featured_img'] : '',
                 'author_id' => $post['post_author'],
                 'views_count' => $postViewsCount,
                 'custom_css' => $css ?? ''
