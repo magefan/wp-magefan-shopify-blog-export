@@ -432,11 +432,14 @@ class Export
 
             $content = $post['post_content'];
             $content = str_replace('<!--more-->', '<!-- pagebreak -->', $content);
-            $content = preg_replace(
+            /*$content = preg_replace(
                 '/src=[\'"]((http:\/\/|https:\/\/|\/\/)(.*)|(\s|"|\')|(\/[\d\w_\-\.]*))\/wp-content\/uploads_(.*)((\.jpg|\.jpeg|\.gif|\.png|\.tiff|\.tif|\.svg)|(\s|"|\'))[\'"\s]/Ui',
                 'src="$4{{media url="magefan_blog$6$8"}}$9"',
                 $content
-            );
+            );*/
+
+            /** This filter is documented in wp-includes/post-template.php */
+            $content = apply_filters( 'the_content', str_replace( ']]>', ']]&gt;', $content ) );
 
             $content = $this->wordpressOutoutWrap($content);
 
@@ -444,6 +447,14 @@ class Export
             if (class_exists('WebberZone\Top_Ten\Counter')) {
                 $postViewsCount = \WebberZone\Top_Ten\Counter::get_post_count_only($post['ID'], 'total', $blogId);
             }
+
+            if (strpos($content, 'wp-block-gallery')) {
+                $gallery_css = file_get_contents( ABSPATH . 'wp-includes/blocks/gallery/style.min.css' );
+                $common_css = file_get_contents( ABSPATH . 'wp-includes/css/dist/block-library/common.min.css' );
+
+                $css = wp_get_global_stylesheet() . "\n" . $gallery_css . "\n" . $common_css;
+            }
+            $upload_dir = wp_upload_dir();
 
             $resultPostData[] = [
                 'old_id' => $post['ID'],
@@ -461,9 +472,10 @@ class Export
                 'is_active' => (int)($post['post_status'] == 'publish'),
                 'categories' => $postCategories,
                 'tags' => $postTags,
-                'featured_img' => $post['featured_img'],
+                'featured_img' => $post['featured_img'] ? $upload_dir['baseurl'] . $post['featured_img'] : '',
                 'author_id' => $post['post_author'],
-                'views_count' => $postViewsCount
+                'views_count' => $postViewsCount,
+                'custom_css' => $css ?? ''
             ];
         }
 

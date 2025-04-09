@@ -36,6 +36,11 @@ function getExporterKey()
     return $string;
 }
 
+$magentoDomain = $_POST['magento_domain'] ?? '';
+if ($magentoDomain) {
+    $magentoDomain = rtrim($magentoDomain, '/') . '/';
+}
+
 ?>
 
 <script>
@@ -44,12 +49,12 @@ function getExporterKey()
 
         var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
         var pushDataToShopify = ajaxurl;
-        var shopifyUrl = '<?php echo 'https://blog.sfapp.magefan.top/blog/import' ?>';
+        var shopifyUrl = '<?php echo $_POST['destination'] == 'magento' ? $magentoDomain . 'rest/V1/magefan-blogimport/wpimport' : 'https://blog.sfapp.magefan.top/blog/import'; ?>';
         var importKey = '<?php echo ($_POST['shopify_import_key'] ?? '') ?>';
         var entitiesLimit = '<?php echo ($_POST['entities_limit'] ?? '') ?>';
         var exporterKey = '<?php echo getExporterKey(); ?>';
         var closedConnection = false;
-        var indexPageUrl = '<?php echo admin_url('admin.php?page=magefan-shopify-blog-export-form'); ?>';
+        var indexPageUrl = '<?php echo admin_url('admin.php?page=magefan-blog-export-form'); ?>';
 
         var setGetParameters = function (urlStr, getParameters) {
             var url = new URL(urlStr);
