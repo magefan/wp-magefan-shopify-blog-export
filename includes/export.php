@@ -31,10 +31,10 @@ class Export
         $_pref = $wpdb->prefix;
 
         $sql = $wpdb->prepare(
-            'SELECT t.term_id as old_id
-                FROM %s t
-                LEFT JOIN %s tt on t.term_id = tt.term_id
-                WHERE tt.taxonomy = "category" AND t.slug <> "uncategorized"', $_pref . 'terms' , $_pref . 'term_taxonomy'
+            "SELECT t.term_id as old_id
+                FROM {$_pref}terms t
+                LEFT JOIN {$_pref}term_taxonomy tt on t.term_id = tt.term_id
+                WHERE tt.taxonomy = 'category' AND t.slug <> 'uncategorized'"
         );
         return $this->getEntityIds($sql);
     }
@@ -45,12 +45,11 @@ class Export
         $_pref = $wpdb->prefix;
 
         $sql = $wpdb->prepare(
-            'SELECT t.term_id as old_id
-                FROM %s t
-                LEFT JOIN %s tt on t.term_id = tt.term_id
-                WHERE tt.taxonomy = "post_tag" AND t.slug <> "uncategorized"' , $_pref . 'terms' , $_pref . 'term_taxonomy'
+            "SELECT t.term_id as old_id
+                FROM {$_pref}terms t
+                LEFT JOIN {$_pref}term_taxonomy tt on t.term_id = tt.term_id
+                WHERE tt.taxonomy = 'post_tag' AND t.slug <> 'uncategorized'"
         );
-
         return $this->getEntityIds($sql);
     }
 
@@ -59,7 +58,7 @@ class Export
         global $wpdb;
         $_pref = $wpdb->prefix;
 
-        $sql = $wpdb->prepare('SELECT ID as old_id FROM %s WHERE `post_type` = "post"', $_pref . 'posts');
+        $sql = $wpdb->prepare("SELECT ID as old_id FROM  {$_pref}posts WHERE `post_type` = 'post'");
 
         return $this->getEntityIds($sql);
     }
@@ -70,12 +69,11 @@ class Export
         $_pref = $wpdb->prefix;
 
         $sql = $wpdb->prepare(
-            'SELECT comment_ID as old_id
+            "SELECT comment_ID as old_id
                         FROM
-                            %s
+                           {$_pref}comments
                         WHERE
-                            `comment_approved`=1',
-            $_pref . 'comments'
+                            `comment_approved`=1"
         );
 
         return $this->getEntityIds($sql);
@@ -87,10 +85,9 @@ class Export
         $_pref = $wpdb->prefix;
 
         $sql = $wpdb->prepare(
-            'SELECT
+            "SELECT
                     DISTINCT u.ID as old_id
-                FROM %s as u',
-            $_pref . 'users'
+                FROM {$_pref}users as u"
         );
         return $this->getEntityIds($sql);
     }
