@@ -66,14 +66,12 @@ class Export
     public function getCommentIds()
     {
         global $wpdb;
-        $_pref = $wpdb->prefix;
+        $comments_table = $wpdb->prefix . 'comments';
 
         $sql = $wpdb->prepare(
             "SELECT comment_ID as old_id
-                        FROM
-                           {$_pref}comments
-                        WHERE
-                            `comment_approved`=1"
+                 FROM {$comments_table}
+                 WHERE comment_approved = 1"
         );
 
         return $this->getEntityIds($sql);
@@ -82,12 +80,10 @@ class Export
     public function getAuthorIds(): array
     {
         global $wpdb;
-        $_pref = $wpdb->prefix;
+        $users_table = $wpdb->prefix . 'users';
 
         $sql = $wpdb->prepare(
-            "SELECT
-                    DISTINCT u.ID as old_id
-                FROM {$_pref}users as u"
+            "SELECT DISTINCT ID as old_id FROM {$users_table}"
         );
         return $this->getEntityIds($sql);
     }
