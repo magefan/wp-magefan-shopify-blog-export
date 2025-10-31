@@ -30,7 +30,7 @@ function getExporterKey()
     $string = '';
 
     for ($i = 0; $i < 20; $i++) {
-        $string .= $characters[mt_rand(0, strlen($characters) - 1)];
+        $string .= $characters[wp_rand(0, strlen($characters) - 1)];
     }
 
     return $string;
@@ -47,14 +47,14 @@ if ($magentoDomain) {
     jQuery(document).ready(function() {
         alert('Don\'t leave the page !');
 
-        var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
+        var ajaxurl = '<?php echo esc_url(admin_url('admin-ajax.php')); ?>';
         var pushDataToShopify = ajaxurl;
-        var shopifyUrl = '<?php echo $_POST['destination'] == 'magento' ? $magentoDomain . 'rest/V1/magefan-blogimport/wpimport' : 'https://blog.sfapp.magefan.top/blog/import'; ?>';
-        var importKey = '<?php echo ($_POST['shopify_import_key'] ?? '') ?>';
-        var entitiesLimit = '<?php echo ($_POST['entities_limit'] ?? '') ?>';
-        var exporterKey = '<?php echo getExporterKey(); ?>';
+        var shopifyUrl = '<?php echo esc_url($_POST['destination'] == 'magento' ? $magentoDomain . 'rest/V1/magefan-blogimport/wpimport' : 'https://blog.sfapp.magefan.top/blog/import'); ?>';
+        var importKey = '<?php echo esc_js((sanitize_text_field($_POST['shopify_import_key']) ?? '')) ?>';
+        var entitiesLimit = '<?php echo esc_js((sanitize_text_field($_POST['entities_limit']) ?? '')) ?>';
+        var exporterKey = '<?php echo esc_js(getExporterKey()); ?>';
         var closedConnection = false;
-        var indexPageUrl = '<?php echo admin_url('admin.php?page=magefan-blog-export-form'); ?>';
+        var indexPageUrl = '<?php echo esc_url(admin_url('admin.php?page=magefan-shopify-blog-export-form')); ?>';
 
         var setGetParameters = function (urlStr, getParameters) {
             var url = new URL(urlStr);
