@@ -36,6 +36,11 @@ function getExporterKey()
     return $string;
 }
 
+$magentoDomain = $_POST['magento_domain'] ?? '';
+if ($magentoDomain) {
+    $magentoDomain = rtrim($magentoDomain, '/') . '/';
+}
+
 ?>
 
 <script>
@@ -44,7 +49,7 @@ function getExporterKey()
 
         var ajaxurl = '<?php echo esc_url(admin_url('admin-ajax.php')); ?>';
         var pushDataToShopify = ajaxurl;
-        var shopifyUrl = '<?php echo esc_url( 'https://blog.sfapp.magefan.top/blog/import' ); ?>';
+        var shopifyUrl = '<?php echo esc_url($_POST['destination'] == 'magento' ? $magentoDomain . 'rest/V1/magefan-blogimport/wpimport' : 'https://blog.sfapp.magefan.top/blog/import'); ?>';
         var importKey = '<?php echo esc_js((sanitize_text_field($_POST['shopify_import_key']) ?? '')) ?>';
         var entitiesLimit = '<?php echo esc_js((sanitize_text_field($_POST['entities_limit']) ?? '')) ?>';
         var exporterKey = '<?php echo esc_js(getExporterKey()); ?>';
