@@ -1,4 +1,4 @@
-=== Magefan Shopify Blog Export ===
+=== Magefan Blog Export ===
 Contributors: magefan
 Tags: export, shopify, blog
 Requires at least: 5.0

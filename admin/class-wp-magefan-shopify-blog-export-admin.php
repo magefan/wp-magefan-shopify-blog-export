@@ -5,7 +5,7 @@
  * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
  */
 
-class Plugin_Name_Admin {
+class MAGESHBL_Admin {
 
 	/**
 	 * The ID of this plugin.
@@ -52,10 +52,10 @@ class Plugin_Name_Admin {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in Plugin_Name_Loader as all of the hooks are defined
+		 * defined in MAGESHBL_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The Plugin_Name_Loader will then create the relationship
+		 * The MAGESHBL_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
@@ -75,10 +75,10 @@ class Plugin_Name_Admin {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in Plugin_Name_Loader as all of the hooks are defined
+		 * defined in MAGESHBL_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The Plugin_Name_Loader will then create the relationship
+		 * The MAGESHBL_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
@@ -92,6 +92,11 @@ class Plugin_Name_Admin {
         function magefan_shopifyblogexport_data_extractor() {
 
             require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/export.php';
+
+            if (!isset($_GET['mageshbl_nonce']) ||
+                !wp_verify_nonce(sanitize_text_field($_GET['mageshbl_nonce']), 'magefan_export_action')) {
+                wp_send_json_error('Invalid nonce.');
+            }
 
             $export = new Export();
             $entity = $_GET['entity'];
@@ -170,6 +175,10 @@ class Plugin_Name_Admin {
 
         function magefan_shopifyblogexport_push_data_to_shopify()
         {
+            if (!isset($_POST['mageshbl_nonce']) ||
+                !wp_verify_nonce(sanitize_text_field($_POST['mageshbl_nonce']), 'magefan_export_action')) {
+                wp_send_json_error('Invalid nonce.');
+            }
 
             $entity = (string)($_POST['entity'] ?? '');
             $shopifyUrl = (string)($_POST['shopifyUrl'] ?? '');
