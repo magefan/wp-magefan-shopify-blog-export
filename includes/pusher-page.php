@@ -89,7 +89,8 @@ $inline_js = '
                 type: "GET",
                 data: {
                     action: "magefan_shopifyblogexport_data_extractor",
-                    mageshbl_nonce: mageshbl_nonce
+                    mageshbl_nonce: mageshbl_nonce,
+                    entitiesLimit: entitiesLimit
                 },
                 success: function (response) {
                     var data = response.data;
@@ -170,6 +171,7 @@ $inline_js = '
                         type: "GET",
                         data: {
                             action: "magefan_shopifyblogexport_data_extractor",
+                            mageshbl_nonce: mageshbl_nonce
                         },
                         success: function (response) {
                             var data = response.data;
