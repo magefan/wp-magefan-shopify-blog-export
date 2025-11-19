@@ -50,7 +50,7 @@ class MAGESHBL_Main {
 		} else {
 			$this->version = '1.0.0';
 		}
-		$this->plugin_name = 'wp-magefan-shopify-blog-export';
+		$this->plugin_name = 'wp-magefan-blog-export';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -81,24 +81,24 @@ class MAGESHBL_Main {
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-magefan-shopify-blog-export-loader.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-magefan-blog-export-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-magefan-shopify-blog-export-i18n.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-magefan-blog-export-i18n.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wp-magefan-shopify-blog-export-admin.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wp-magefan-blog-export-admin.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wp-magefan-shopify-blog-export-public.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wp-magefan-blog-export-public.php';
 
 		$this->loader = new MAGESHBL_Loader();
 
