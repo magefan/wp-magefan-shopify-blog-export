@@ -1,5 +1,8 @@
 # WP Blog Export to [Shopify Blog App](https://apps.shopify.com/magefan-blog) by Magefan
 
+> Note: This repository has been archived.
+The functionality is moved to [WordPress Blog Export](https://github.com/magefan/wordpress-blog-export).
+
 <a href="https://savelife.in.ua/en/donate-en/#donate-army-card-monthly"><img width="830" height="208" src="https://cm.magefan.com/blog/support-ukraine.png"></a>
 
 <img width="150" height="100" src="https://magefan.com/media/wysiwyg/made_in_ukraine.jpg">
