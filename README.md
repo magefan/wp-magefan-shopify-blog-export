@@ -9,17 +9,17 @@ The functionality is moved to [WordPress Blog Export](https://github.com/magefan
 
 
 ## Installation Instructions
-  * Download the latest version [archive](https://github.com/magefan/wp-magefan-shopify-blog-export/releases).
+  * Download the latest version [archive](https://github.com/magefan/wp-magefan-blog-export/releases).
   * Unzip the archive.
-  * Make sure that the unzipped folder name is "wp-magefan-shopify-blog-export", if not - rename it.
-  * Upload wp-magefan-shopify-blog-export folder to your wordpress_root_direcotry/wp-content/plugins.
+  * Make sure that the unzipped folder name is "wp-magefan-blog-export", if not - rename it.
+  * Upload wp-magefan-blog-export folder to your wordpress_root_direcotry/wp-content/plugins.
   * Login to your WordPress admin panel > navigate to Plugins > Activate Plugin.
   
 ## Usage
 
 Login to your WordPress Admin Panel > Export to Shopify
     
-<img width="1012" src="https://magefan.com/media/wysiwyg/wp-magefan-shopify-blog-export.png">
+<img width="1012" src="https://magefan.com/media/wysiwyg/wp-magefan-blog-export.png">
 
 ## [Magento 2 Extensions](https://magefan.com/magento-2-extensions) by Magefan
 

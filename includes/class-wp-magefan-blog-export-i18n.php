@@ -5,7 +5,7 @@
  * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
  */
 
-class Plugin_Name_i18n {
+class MAGESHBL_i18n {
 
 
 	/**
@@ -16,7 +16,7 @@ class Plugin_Name_i18n {
 	public function load_plugin_textdomain() {
 
 		/*load_plugin_textdomain(
-			'wp-magefan-shopify-blog-export',
+			'wp-magefan-blog-export',
 			false,
 			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
 		);*/

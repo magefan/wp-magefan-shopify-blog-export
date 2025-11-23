@@ -5,7 +5,7 @@
  * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
  */
 
-class Plugin_Name_Deactivator {
+class MAGESHBL_Deactivator {
 
 	/**
 	 * Short Description. (use period)

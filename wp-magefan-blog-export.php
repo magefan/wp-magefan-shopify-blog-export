@@ -18,7 +18,7 @@
  * @package           Magefan_Shopify_Blog_Export
  *
  * @wordpress-plugin
- * Plugin Name:       Magefan Shopify Blog Export
+ * Plugin Name:       Magefan Blog Export
  * Plugin URI:        https://magefan.com/shopify/apps/blog/
  * Description:       Export blog to shopify blog app by magefan
  * Version:           1.0.0
@@ -26,7 +26,7 @@
  * Author URI:        https://magefan.com/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       wp-magefan-shopify-blog-export
+ * Text Domain:       wp-magefan-blog-export
  * Domain Path:       /languages
  */
 
@@ -44,20 +44,20 @@ define( 'PLUGIN_NAME_VERSION', '1.0.0' );
 
 /**
  * The code that runs during plugin activation.
- * This action is documented in includes/class-wp-magefan-shopify-blog-export-activator.php
+ * This action is documented in includes/class-wp-magefan-blog-export-activator.php
  */
 function activate_plugin_name() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-plugin-name-activator.php';
-	Plugin_Name_Activator::activate();
+	MAGESHBL_Activator::activate();
 }
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/class-wp-magefan-shopify-blog-export-deactivator.php
+ * This action is documented in includes/class-wp-magefan-blog-export-deactivator.php
  */
 function deactivate_plugin_name() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-plugin-name-deactivator.php';
-	Plugin_Name_Deactivator::deactivate();
+	MAGESHBL_Deactivator::deactivate();
 }
 
 register_activation_hook( __FILE__, 'activate_plugin_name' );
@@ -80,7 +80,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-plugin-name.php';
  */
 function run_plugin_name() {
 
-	$plugin = new Plugin_Name();
+	$plugin = new MAGESHBL_Main();
 	$plugin->run();
 
 }

@@ -5,7 +5,7 @@
  * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
  */
 
-class Plugin_Name_Loader {
+class MAGESHBL_Loader {
 
 	/**
 	 * The array of actions registered with WordPress.

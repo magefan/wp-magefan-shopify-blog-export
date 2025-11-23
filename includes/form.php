@@ -1,10 +1,12 @@
-<!--
+<?php
 /**
  * Copyright © Magefan (support@magefan.com). All rights reserved.
  * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
  */
--->
-
+?>
+<?php
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+?>
 <h1>Export to Magefan Blog</h1>
 <form method="post" action="<?php echo esc_url( admin_url( 'admin.php?page=mf-push-page' ) ); ?>">
     <!-- Your HTML form fields go here -->
@@ -57,19 +59,31 @@
 </form>
 
 
-<script>
-    document.getElementById('destination').addEventListener('change', function () {
-        const description = document.getElementById('tagline-description');
-        if (this.value === 'shopify') {
-            description.style.display = 'block';
-            document.getElementById('domain').style.display = 'none';
-            document.getElementById('export_domain').required = false;
-            description.innerHTML = 'Please copy the <strong>Import Key</strong> from your Shopify Admin Panel > Apps > Magefan Blog > Configuration > Import Key.'
-        } else if (this.value === 'magento') {
-            description.style.display = 'block';
-            document.getElementById('domain').style.display = '';
-            document.getElementById('export_domain').required = true;
-            description.innerHTML = 'Please copy the <strong>Import Key</strong> from your Magento Admin Panel > Stores > Configuration > Magefan Blog > Import Key.'
-        }
-    });
-</script>
+<?php
+wp_register_script('mageshbl-inline-js', false, ['jquery'], false, true);
+wp_enqueue_script('mageshbl-inline-js');
+$inline_js = "
+        document.addEventListener('DOMContentLoaded', function() {
+            const destination = document.getElementById('destination');
+            if (!destination) return;
+            destination.addEventListener('change', function() {
+                const description = document.getElementById('tagline-description');
+                const domain = document.getElementById('domain');
+                const exportDomain = document.getElementById('export_domain');
+                if (!description || !domain || !exportDomain) return;
+                if (this.value === 'shopify') {
+                    description.style.display = 'block';
+                    domain.style.display = 'none';
+                    exportDomain.required = false;
+                    description.innerHTML = 'Please copy the <strong>Import Key</strong> from your Shopify Admin Panel > Apps > Magefan Blog > Configuration > Import Key.';
+                } else if (this.value === 'magento') {
+                    description.style.display = 'block';
+                    domain.style.display = '';
+                    exportDomain.required = true;
+                    description.innerHTML = 'Please copy the <strong>Import Key</strong> from your Magento Admin Panel > Stores > Configuration > Magefan Blog > Import Key.';
+                }
+            });
+        });
+    ";
+wp_add_inline_script('mageshbl-inline-js', $inline_js);
+?>
